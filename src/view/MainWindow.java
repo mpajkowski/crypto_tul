@@ -22,7 +22,7 @@ public class MainWindow extends JFrame{
 
         generateKeysButton = new JButton("Generuj klucze");
         generateKeysButton.setVisible(true);
-        signDocumentButton = new JButton("Podpisz dokument");
+        signDocumentButton = new JButton("Wygeneruj podpis");
         signDocumentButton.setVisible(true);
 
         this.setLayout(new FlowLayout());
@@ -50,6 +50,12 @@ public class MainWindow extends JFrame{
         generateKeysButton.addActionListener(actionEvent -> {
             if (generateKeysWindow == null) {
                 generateKeysWindow = new GenerateKeysWindow(this);
+            }
+        });
+
+        signDocumentButton.addActionListener(actionEvent -> {
+            if (signDocumentWindow == null) {
+                signDocumentWindow = new SignDocumentWindow(this);
             }
         });
     }

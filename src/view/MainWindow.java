@@ -5,12 +5,14 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame {
     private JFrame generateKeysWindow;
     private JFrame signDocumentWindow;
 
     private JButton generateKeysButton;
     private JButton signDocumentButton;
+    private JButton verifyButton;
+    private VerifyWindow verifyWindow;
 
     public MainWindow() {
         super("RSA");
@@ -24,10 +26,13 @@ public class MainWindow extends JFrame{
         generateKeysButton.setVisible(true);
         signDocumentButton = new JButton("Wygeneruj podpis");
         signDocumentButton.setVisible(true);
+        verifyButton = new JButton("Weryfikuj podpis");
+        verifyButton.setVisible(true);
 
         this.setLayout(new FlowLayout());
         this.add(generateKeysButton);
         this.add(signDocumentButton);
+        this.add(verifyButton);
 
         this.setVisible(true);
 
@@ -38,12 +43,12 @@ public class MainWindow extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (generateKeysWindow != null || signDocumentWindow != null) {
-                    return;
+                if (generateKeysWindow == null
+                        && signDocumentWindow == null
+                        && verifyWindow == null) {
+                    super.windowClosing(e);
+                    System.exit(0);
                 }
-
-                super.windowClosing(e);
-                System.exit(0);
             }
         });
 
@@ -58,13 +63,23 @@ public class MainWindow extends JFrame{
                 signDocumentWindow = new SignDocumentWindow(this);
             }
         });
+
+        verifyButton.addActionListener(actionEvent -> {
+            if (verifyWindow == null) {
+                verifyWindow = new VerifyWindow(this);
+            }
+        });
     }
 
-    public void clearGenerateKeysWindow() {
+    void clearGenerateKeysWindow() {
         generateKeysWindow = null;
     }
 
-    public void clearSignDocumentsWindow() {
+    void clearSignDocumentsWindow() {
         signDocumentWindow = null;
+    }
+
+    void clearVerifyWindow() {
+        verifyWindow = null;
     }
 }

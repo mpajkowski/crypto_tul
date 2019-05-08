@@ -15,7 +15,6 @@ import logic.RSAKeyGenerator;
 public class GenerateKeysWindow extends JFrame {
     private MainWindow parentWindow;
     private File path;
-    private JLabel pathLabel;
     private JTextField pathTextField;
 
     private JButton selectPathButton;
@@ -27,7 +26,7 @@ public class GenerateKeysWindow extends JFrame {
 
         path = null;
 
-        pathLabel = new JLabel("Ścieżka:");
+        JLabel pathLabel = new JLabel("Ścieżka:");
         pathTextField = new JTextField(50);
         pathTextField.setVisible(true);
 

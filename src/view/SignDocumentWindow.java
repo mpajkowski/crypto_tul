@@ -17,17 +17,12 @@ public class SignDocumentWindow extends JFrame {
     private MainWindow parentWindow;
 
     private File privateKeyPath;
-    private JLabel privateKeyPathLabel;
     private JTextField privateKeyPathTextField;
     private JButton privateKeyPathButton;
 
     private File documentPath;
-    private JLabel documentPathLabel;
     private JTextField documentPathTextField;
     private JButton documentPathButton;
-
-    private JLabel messageLabel;
-    private JTextArea messageTextArea;
 
     private JButton generateSignButton;
 
@@ -38,22 +33,22 @@ public class SignDocumentWindow extends JFrame {
         privateKeyPath = null;
         documentPath = null;
 
-        privateKeyPathLabel = new JLabel("Ścieżka do klucza prywatnego:");
+        JLabel privateKeyPathLabel = new JLabel("Ścieżka do klucza prywatnego:");
         privateKeyPathTextField = new JTextField(50);
         privateKeyPathLabel.setVisible(true);
 
         privateKeyPathButton = new JButton("Wybierz ścieżkę");
         privateKeyPathButton.setVisible(true);
 
-        documentPathLabel = new JLabel("Ścieżka do dokumentu:");
+        JLabel documentPathLabel = new JLabel("Ścieżka do dokumentu:");
         documentPathTextField = new JTextField(50);
         documentPathTextField.setVisible(true);
 
         documentPathButton = new JButton("Wybierz ścieżkę");
         documentPathButton.setVisible(true);
 
-        messageLabel = new JLabel("Wiadomość:");
-        messageTextArea = new JTextArea(24, 83);
+        JLabel messageLabel = new JLabel("Wiadomość:");
+        JTextArea messageTextArea = new JTextArea(24, 83);
         messageTextArea.setVisible(true);
 
         generateSignButton = new JButton("Wygeneruj podpis");

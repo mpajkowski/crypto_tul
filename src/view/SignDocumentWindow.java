@@ -1,17 +1,27 @@
 package view;
 
+import logic.RSACrypt;
+
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class SignDocumentWindow extends JFrame {
     private MainWindow parentWindow;
 
+    private File privateKeyPath;
     private JLabel privateKeyPathLabel;
     private JTextField privateKeyPathTextField;
     private JButton privateKeyPathButton;
 
+    private File documentPath;
     private JLabel documentPathLabel;
     private JTextField documentPathTextField;
     private JButton documentPathButton;
@@ -19,9 +29,14 @@ public class SignDocumentWindow extends JFrame {
     private JLabel messageLabel;
     private JTextArea messageTextArea;
 
+    private JButton generateSignButton;
+
     public SignDocumentWindow(MainWindow parentWindow) {
         super("Wygeneruj podpis");
         this.parentWindow = parentWindow;
+
+        privateKeyPath = null;
+        documentPath = null;
 
         privateKeyPathLabel = new JLabel("Ścieżka do klucza prywatnego:");
         privateKeyPathTextField = new JTextField(50);
@@ -38,8 +53,10 @@ public class SignDocumentWindow extends JFrame {
         documentPathButton.setVisible(true);
 
         messageLabel = new JLabel("Wiadomość:");
-        messageTextArea = new JTextArea(24, 100);
+        messageTextArea = new JTextArea(24, 83);
         messageTextArea.setVisible(true);
+
+        generateSignButton = new JButton("Wygeneruj podpis");
 
         this.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -53,6 +70,8 @@ public class SignDocumentWindow extends JFrame {
 
         this.add(messageLabel);
         this.add(messageTextArea);
+
+        this.add(generateSignButton);
 
         this.pack();
         this.setSize(950, 700);
@@ -69,6 +88,51 @@ public class SignDocumentWindow extends JFrame {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 parentWindow.clearSignDocumentsWindow();
+            }
+        });
+
+        privateKeyPathButton.addActionListener(actionEvent -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setCurrentDirectory(new File("."));
+            fc.setFileFilter(new FileNameExtensionFilter("RSA key format", "key"));
+
+            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                privateKeyPath = fc.getSelectedFile();
+            }
+            privateKeyPathTextField.setText(privateKeyPath.toString());
+        });
+
+        documentPathButton.addActionListener(actionEvent -> {
+            JFileChooser fc = new JFileChooser();
+            fc.setCurrentDirectory(new File("."));
+
+            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                documentPath = fc.getSelectedFile();
+            }
+            documentPathTextField.setText(documentPath.toString());
+        });
+
+        generateSignButton.addActionListener(actionEvent -> {
+            byte[] docContent = null;
+            try {
+                docContent = Files.readAllBytes(documentPath.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String key = null;
+            try {
+                key = Files.readString(privateKeyPath.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            var cert = RSACrypt.crypt(docContent, key);
+            var certFile = documentPath.toString().concat(".cert");
+            try (BufferedWriter br = new BufferedWriter(new FileWriter(certFile))) {
+                br.write(cert);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }

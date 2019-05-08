@@ -32,8 +32,8 @@ public class RSAKeyGenerator {
 
         BigInteger d = e.modInverse(phi);
 
-        var publicKey = e.toString().concat(n.toString());
-        var privateKey = d.toString();
+        var publicKey = e.toString().concat("-").concat(n.toString());
+        var privateKey = d.toString().concat("-").concat(n.toString());
 
         return new KeyPair(publicKey, privateKey);
     }

@@ -22,8 +22,8 @@ public class RSAKeyGenerator {
 
         ensureInequality(p, q);
 
-        BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
         BigInteger n = p.multiply(q);
+        BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
         BigInteger e = bigThree;
         while (!e.gcd(phi).equals(BigInteger.ONE)) {

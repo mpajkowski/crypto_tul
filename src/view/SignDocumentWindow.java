@@ -1,6 +1,7 @@
 package view;
 
 import logic.RSACrypt;
+import logic.SimpleHash;
 import view.utils.*;
 
 import javax.swing.*;
@@ -112,8 +113,12 @@ public class SignDocumentWindow extends JFrame {
                 e.printStackTrace();
             }
 
-            var cert = RSACrypt.crypt(docContent, key);
+            var hasher = new SimpleHash();
+            var docContentHash = hasher.computeHash(docContent);
+
+            var cert = RSACrypt.crypt(docContentHash, key);
             var certFile = documentPath.toString().concat(".cert");
+
             try (BufferedWriter br = new BufferedWriter(new FileWriter(certFile))) {
                 br.write(cert);
             } catch (IOException e) {

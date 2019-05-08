@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RSACrypt {
-    public static String crypt(byte[] message, String key) {
+    public static String crypt(String message, String key) {
         List<String> kAndN = Arrays.asList(key.split("-"));
 
         BigInteger messageNum = new BigInteger(message);

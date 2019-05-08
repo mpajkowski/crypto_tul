@@ -1,5 +1,7 @@
 package view;
 
+import logic.RSACrypt;
+import logic.SimpleHash;
 import view.utils.*;
 
 import javax.swing.*;
@@ -7,6 +9,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class VerifyWindow extends JFrame {
     private MainWindow parentWindow;
@@ -106,6 +110,34 @@ public class VerifyWindow extends JFrame {
                         false));
 
         verifyCertButton.addActionListener(actionEvent -> {
+            byte[] docContent = null;
+            try {
+                docContent = Files.readAllBytes(documentPath.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String key = null;
+            try {
+                key = Files.readString(publicKeyPath.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String cert = null;
+            try {
+                cert = Files.readString(certPath.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            var hasher = new SimpleHash();
+
+            var localHash = hasher.computeHash(docContent);
+            var decryptedCert = RSACrypt.crypt(cert, key);
+
+            System.out.println("localhash    : " + localHash);
+            System.out.println("decryptedcert: " + decryptedCert);
         });
     }
 }

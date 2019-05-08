@@ -1,5 +1,7 @@
 package view;
 
+import view.utils.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -30,7 +32,7 @@ public class VerifyWindow extends JFrame {
         publicKeyPath = null;
         documentPath = null;
 
-        JLabel publicKeyPathLabel = new JLabel("Ścieżka do klucza prywatnego:");
+        JLabel publicKeyPathLabel = new JLabel("Ścieżka do klucza publicznego:");
         publicKeyPathTextField = new JTextField(50);
         publicKeyPathLabel.setVisible(true);
 
@@ -86,9 +88,24 @@ public class VerifyWindow extends JFrame {
         });
 
         // TODO
-        publicKeyPathButton.addActionListener(actionEvent -> {});
-        documentPathButton.addActionListener(actionEvent -> {});
-        certPathButton.addActionListener(actionEvent -> {});
-        verifyCertButton.addActionListener(actionEvent -> {});
+        publicKeyPathButton.addActionListener(actionEvent ->
+                publicKeyPath = FileHelper.setPath(publicKeyPathTextField,
+                        VerifyWindow.this,
+                        false,
+                        true));
+
+        documentPathButton.addActionListener(actionEvent ->
+                documentPath = FileHelper.setPath(documentPathTextField,
+                        VerifyWindow.this,
+                        false,
+                        false));
+        certPathButton.addActionListener(actionEvent ->
+                certPath = FileHelper.setPath(certPathTextField,
+                        VerifyWindow.this,
+                        false,
+                        false));
+
+        verifyCertButton.addActionListener(actionEvent -> {
+        });
     }
 }

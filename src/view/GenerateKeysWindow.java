@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import logic.RSAKeyGenerator;
+import view.utils.FileHelper;
 
 public class GenerateKeysWindow extends JFrame {
     private MainWindow parentWindow;
@@ -61,15 +62,7 @@ public class GenerateKeysWindow extends JFrame {
         });
 
         selectPathButton.addActionListener(actionEvent -> {
-            JFileChooser fc = new JFileChooser();
-            fc.setCurrentDirectory(new File("."));
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            fc.setAcceptAllFileFilterUsed(false);
-
-            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                path = fc.getSelectedFile();
-            }
-            pathTextField.setText(path.toString());
+            path = FileHelper.setPath(pathTextField, this, true, false);
         });
 
         generateKeysButton.addActionListener(actionEvent -> {

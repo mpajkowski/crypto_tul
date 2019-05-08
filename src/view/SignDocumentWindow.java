@@ -1,9 +1,9 @@
 package view;
 
 import logic.RSACrypt;
+import view.utils.*;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -87,24 +87,14 @@ public class SignDocumentWindow extends JFrame {
         });
 
         privateKeyPathButton.addActionListener(actionEvent -> {
-            JFileChooser fc = new JFileChooser();
-            fc.setCurrentDirectory(new File("."));
-            fc.setFileFilter(new FileNameExtensionFilter("RSA key format", "key"));
-
-            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                privateKeyPath = fc.getSelectedFile();
-            }
-            privateKeyPathTextField.setText(privateKeyPath.toString());
+            privateKeyPath = FileHelper.setPath(privateKeyPathTextField,
+                    this,
+                    false,
+                    true);
         });
 
         documentPathButton.addActionListener(actionEvent -> {
-            JFileChooser fc = new JFileChooser();
-            fc.setCurrentDirectory(new File("."));
-
-            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                documentPath = fc.getSelectedFile();
-            }
-            documentPathTextField.setText(documentPath.toString());
+            documentPath = FileHelper.setPath(documentPathTextField, this, false, false);
         });
 
         generateSignButton.addActionListener(actionEvent -> {

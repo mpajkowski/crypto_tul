@@ -99,6 +99,10 @@ public class SignDocumentWindow extends JFrame {
         });
 
         generateSignButton.addActionListener(actionEvent -> {
+            if (privateKeyPath == null || documentPath == null) {
+                JOptionPane.showMessageDialog(this, "Wypełnij wszystkie pola!");
+                return;
+            }
             byte[] docContent = null;
             try {
                 docContent = Files.readAllBytes(documentPath.toPath());
@@ -124,6 +128,11 @@ public class SignDocumentWindow extends JFrame {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            JOptionPane.showMessageDialog(this,
+                    "Wygenerowano podpis." +
+                            "Znajduje się on w tej samej lokalizacji co wskazany plik.");
         });
+
     }
 }

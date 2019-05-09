@@ -110,6 +110,11 @@ public class VerifyWindow extends JFrame {
                         false));
 
         verifyCertButton.addActionListener(actionEvent -> {
+            if (publicKeyPath == null || documentPath == null || certPath == null) {
+                JOptionPane.showMessageDialog(this, "Wypełnij wszystkie pola!");
+                return;
+            }
+
             byte[] docContent = null;
             try {
                 docContent = Files.readAllBytes(documentPath.toPath());
@@ -138,6 +143,12 @@ public class VerifyWindow extends JFrame {
 
             System.out.println("localhash    : " + localHash);
             System.out.println("decryptedcert: " + decryptedCert);
+
+            String okMessage = "OK! Wartości funkcji skrótu zgadzają się!";
+            String nokMessage = "Nie najlepiej! Wartości funkcji skrótu nie zgadzają się.";
+
+            JOptionPane.showMessageDialog(this,
+                    localHash.equals(decryptedCert) ? okMessage : nokMessage);
         });
     }
 }

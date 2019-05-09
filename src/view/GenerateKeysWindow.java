@@ -66,6 +66,10 @@ public class GenerateKeysWindow extends JFrame {
         });
 
         generateKeysButton.addActionListener(actionEvent -> {
+            if (path == null) {
+                JOptionPane.showMessageDialog(this, "Wypełnij wszystkie pola!");
+                return;
+            }
             var rsaKeyGen = new RSAKeyGenerator();
             var keys = rsaKeyGen.generateKeys();
 
@@ -84,10 +88,9 @@ public class GenerateKeysWindow extends JFrame {
                 e.printStackTrace();
             }
 
-            System.out.println("public key:");
-            System.out.println(keys.getPublicKey());
-            System.out.println("private key");
-            System.out.println(keys.getPrivateKey());
+            JOptionPane.showMessageDialog(this,
+                    "Wygenerowano klucze, pliki znajdują się pod wskazaną lokalizacją.\n" +
+                    "Nie przekazuj osobom trzecim klucza prywatnego!");
         });
     }
 }

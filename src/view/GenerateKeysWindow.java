@@ -90,7 +90,7 @@ public class GenerateKeysWindow extends JFrame {
 
             JOptionPane.showMessageDialog(this,
                     "Wygenerowano klucze, pliki znajdują się pod wskazaną lokalizacją.\n" +
-                    "Nie przekazuj osobom trzecim klucza prywatnego!");
+                    "Nie przekazuj klucza prywatnego osobom trzecim!");
         });
     }
 }

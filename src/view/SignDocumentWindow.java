@@ -131,7 +131,7 @@ public class SignDocumentWindow extends JFrame {
 
             JOptionPane.showMessageDialog(this,
                     "Wygenerowano podpis." +
-                            "Znajduje się on w tej samej lokalizacji co wskazany plik.");
+                            "Znajduje się on w tej samej lokalizacji co wybrany plik dokumentu.");
         });
 
     }

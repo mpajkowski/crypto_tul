@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class SignDocumentWindow extends JFrame {
     private MainWindow parentWindow;
@@ -24,12 +25,16 @@ public class SignDocumentWindow extends JFrame {
     private File documentPath;
     private JTextField documentPathTextField;
     private JButton documentPathButton;
+    private JTextArea messageTextArea;
+    private JCheckBox checkBox;
 
     private JButton generateSignButton;
 
     public SignDocumentWindow(MainWindow parentWindow) {
         super("Wygeneruj podpis");
         this.parentWindow = parentWindow;
+
+        setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         privateKeyPath = null;
         documentPath = null;
@@ -48,29 +53,34 @@ public class SignDocumentWindow extends JFrame {
         documentPathButton = new JButton("Wybierz ścieżkę");
         documentPathButton.setVisible(true);
 
+        checkBox = new JCheckBox("Dokument z pliku", true);
+        checkBox.setVisible(true);
+
         JLabel messageLabel = new JLabel("Wiadomość:");
-        JTextArea messageTextArea = new JTextArea(24, 83);
-        messageTextArea.setVisible(true);
+        messageTextArea = new JTextArea(24, 83);
 
         generateSignButton = new JButton("Wygeneruj podpis");
 
-        this.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        JPanel privateKeyPathPanel = new JPanel();
+        privateKeyPathPanel.add(privateKeyPathLabel);
+        privateKeyPathPanel.add(privateKeyPathTextField);
+        privateKeyPathPanel.add(privateKeyPathButton);
+        getContentPane().add(privateKeyPathPanel);
 
-        this.add(privateKeyPathLabel);
-        this.add(privateKeyPathTextField);
-        this.add(privateKeyPathButton);
+        JPanel documentPathPanel = new JPanel();
+        getContentPane().add(documentPathPanel);
+        documentPathPanel.add(documentPathLabel);
+        documentPathPanel.add(documentPathTextField);
+        documentPathPanel.add(documentPathButton);
 
-        this.add(documentPathLabel);
-        this.add(documentPathTextField);
-        this.add(documentPathButton);
-
+        this.add(checkBox);
         this.add(messageLabel);
         this.add(messageTextArea);
 
         this.add(generateSignButton);
 
         this.pack();
-        this.setSize(950, 700);
+        this.setSize(1000, 700);
         this.setResizable(false);
 
         this.setVisible(true);
@@ -99,15 +109,9 @@ public class SignDocumentWindow extends JFrame {
         });
 
         generateSignButton.addActionListener(actionEvent -> {
-            if (privateKeyPath == null || documentPath == null) {
+            if ((privateKeyPath == null) || (documentPath == null && checkBox.isSelected())) {
                 JOptionPane.showMessageDialog(this, "Wypełnij wszystkie pola!");
                 return;
-            }
-            byte[] docContent = null;
-            try {
-                docContent = Files.readAllBytes(documentPath.toPath());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
             String key = null;
@@ -115,6 +119,26 @@ public class SignDocumentWindow extends JFrame {
                 key = Files.readString(privateKeyPath.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+
+            byte[] docContent = null;
+
+            if (checkBox.isSelected()) {
+                try {
+                    docContent = Files.readAllBytes(documentPath.toPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                docContent = messageTextArea.getText().getBytes();
+
+                documentPath = new File(Paths.get(privateKeyPath.toString()).getParent() + "/important_message.txt");
+
+                try (BufferedWriter br = new BufferedWriter(new FileWriter(documentPath))) {
+                    br.write(new String(docContent));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             var hasher = new SimpleHash();
@@ -129,9 +153,15 @@ public class SignDocumentWindow extends JFrame {
                 e.printStackTrace();
             }
 
-            JOptionPane.showMessageDialog(this,
-                    "Wygenerowano podpis." +
-                            "Znajduje się on w tej samej lokalizacji co wybrany plik dokumentu.");
+            var msg = "Wygenerowano podpis.\n";
+
+            if (!checkBox.isSelected()) {
+                msg += "Plik z wiadomością oraz podpisem znajduje się w tej samej lokalizacji\n" + "co klucz prywatny.";
+            } else {
+                msg += "Znajduje się on w tej samej lokalizacji co wybrany plik dokumentu.";
+            }
+
+            JOptionPane.showMessageDialog(this, msg);
         });
 
     }

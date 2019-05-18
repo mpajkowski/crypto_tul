@@ -80,7 +80,7 @@ public class SignDocumentWindow extends JFrame {
         this.add(generateSignButton);
 
         this.pack();
-        this.setSize(1000, 700);
+        this.setSize(950, 700);
         this.setResizable(false);
 
         this.setVisible(true);
@@ -144,7 +144,7 @@ public class SignDocumentWindow extends JFrame {
             var hasher = new SimpleHash();
             var docContentHash = hasher.computeHash(docContent);
 
-            var cert = RSACrypt.crypt(docContentHash, key);
+            var cert = RSACrypt.crypt(docContentHash.trim(), key.trim());
             var certFile = documentPath.toString().concat(".cert");
 
             try (BufferedWriter br = new BufferedWriter(new FileWriter(certFile))) {

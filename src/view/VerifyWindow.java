@@ -139,7 +139,7 @@ public class VerifyWindow extends JFrame {
             var hasher = new SimpleHash();
 
             var localHash = hasher.computeHash(docContent);
-            var decryptedCert = RSACrypt.crypt(cert, key);
+            String decryptedCert = RSACrypt.crypt(cert.trim(), key.trim());
 
             System.out.println("localhash    : " + localHash);
             System.out.println("decryptedcert: " + decryptedCert);
